@@ -53,7 +53,7 @@ def noteyoudao(YNOTE_SESS: str, user: str, passwd: str):
             print(s.cookies)
             return
         else:
-            print(user+'登陆成功，更新YNOTE_SESS,重新签到')
+            print(user+'登录成功，更新YNOTE_SESS,重新签到')
             YNOTE_SESS = x[0]
             noteyoudao(YNOTE_SESS, user, passwd)
             return YNOTE_SESS
