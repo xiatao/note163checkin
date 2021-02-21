@@ -3,6 +3,7 @@ import sys
 import json
 import time
 import urllib3
+import os
 
 urllib3.disable_warnings()
 
@@ -31,8 +32,8 @@ def noteyoudao(YNOTE_SESS: str, user: str, passwd: str):
         space = info['space'] / 1048576
         t = time.strftime('%Y-%m-%d %H:%M:%S',
                           time.localtime(info['time'] / 1000))
-        print(user+'签到成功，本次获取'+str(space) +
-              'M, 总共获取'+str(total)+'M, 签到时间'+str(t))
+        print(f'{user}签到成功，本次获取{space}M, 总共获取{total}M, 签到时间{t}')
+        pushplus('有道云笔记签到成功',f'本次获取{space}M, 总共获取{total}M, 签到时间{t}')
     # cookie 登录失效，改用用户名密码登录
     else:
         login_url = 'https://note.youdao.com/login/acc/urs/verify/check?app=web&product=YNOTE&tp=ursto' \
@@ -58,6 +59,20 @@ def noteyoudao(YNOTE_SESS: str, user: str, passwd: str):
             noteyoudao(YNOTE_SESS, user, passwd)
             return YNOTE_SESS
 
+def pushplus(title,content,template='html'):#改成你要的正文内容
+    PUSHPLUS_TOKEN = os.environ["PUSHPLUS_TOKEN"] #在pushpush网站中可以找到
+    if isinstance(PUSHPLUS_TOKEN,str) and len(PUSHPLUS_TOKEN)>0:
+        print('检测到PUSHPLUS_TOKEN，准备推送',title,content)        
+        url = 'http://pushplus.hxtrip.com/send'
+        data = {
+            "token":PUSHPLUS_TOKEN,
+            "title":title,
+            "content":content,
+            "template":template
+        }
+        body=json.dumps(data).encode(encoding='utf-8')
+        headers = {'Content-Type':'application/json'}
+        requests.post(url,data=body,headers=headers)
 if __name__ == "__main__":
     noteyoudao("",user,passwd)
 
