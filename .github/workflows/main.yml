@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ master ]
   schedule:
-    - cron: 20 2,10 * * *
+    - cron: 20 2 * * *
 
 jobs:
   build:
@@ -28,7 +28,6 @@ jobs:
         
     - name: Checkin
       env:
-            COOKIES: ${{ secrets.COOKIES }}
             PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
       run: |
         user='${{ secrets.USER }}'
